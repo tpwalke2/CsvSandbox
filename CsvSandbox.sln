@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Csv.Sandbox", "Csv.Sandbox\Csv.Sandbox.csproj", "{C03D2D68-E8BB-45EC-8426-CC2D261A2FFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Csv.Sandbox.Tests", "Csv.Sandbox.Tests\Csv.Sandbox.Tests.csproj", "{C376F476-9B62-4EAF-96DF-2ED248C9040B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C03D2D68-E8BB-45EC-8426-CC2D261A2FFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C03D2D68-E8BB-45EC-8426-CC2D261A2FFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C03D2D68-E8BB-45EC-8426-CC2D261A2FFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C03D2D68-E8BB-45EC-8426-CC2D261A2FFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C376F476-9B62-4EAF-96DF-2ED248C9040B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C376F476-9B62-4EAF-96DF-2ED248C9040B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C376F476-9B62-4EAF-96DF-2ED248C9040B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C376F476-9B62-4EAF-96DF-2ED248C9040B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
