@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Csv.Extensions;
 using Csv.Plumbing.Reflection;
 
@@ -14,10 +15,11 @@ namespace Csv
                 .FirstOrDefault();
         }
 
-        public static IEnumerable<T> DeserializeObjects<T>(string input, CsvConvertSettings settings = null) where T : new()
+        public static IEnumerable<T> DeserializeObjects<T>(string input, CsvConvertSettings settings = null)
+            where T : new()
         {
             settings = settings ?? new CsvConvertSettings();
-            
+
             var parsedRows = Parser.Parser.Parse(input);
             if (parsedRows.Count <= 1) return new List<T>();
 
@@ -38,25 +40,52 @@ namespace Csv
             IList<string> headers,
             IDictionary<string, ValueAccessor> accessors,
             IList<string> currentRow,
-            int rowIndex, 
+            int rowIndex,
             Action<string> onError = null) where T : new()
         {
-            var currentResult = new T();
+            return Enumerable.Range(0, headers.Count)
+                             .Where(columnIndex => accessors.ContainsKey(headers[columnIndex]))
+                             .Select(columnIndex => new ConvertContext(columnIndex, accessors[headers[columnIndex]]))
+                             .Aggregate(
+                                 new T(),
+                                 (current, next) => ApplyFieldValue(
+                                     headers[next.ColumnIndex],
+                                     currentRow,
+                                     rowIndex,
+                                     onError,
+                                     current,
+                                     next));
+        }
 
-            for (var j = 0; j < headers.Count; j++)
+        private class ConvertContext
+        {
+            public ConvertContext(int columnIndex, ValueAccessor accessor)
             {
-                if (!accessors.ContainsKey(headers[j])) continue;
-                var accessor = accessors[headers[j]];
+                ColumnIndex = columnIndex;
+                Accessor    = accessor;
+            }
 
-                try
-                {
-                    accessor.Value[currentResult] = accessor.Type.Convert(currentRow[j]);
-                } catch (ArgumentException)
-                {
-                    var errorMessage = $"Invalid format in record '{rowIndex}' and field {headers[j]}";
-                    if (onError == null) throw new FormatException(errorMessage);
-                    onError(errorMessage);
-                }
+            public int ColumnIndex { get; }
+            public ValueAccessor Accessor { get; }
+        }
+
+        private static T ApplyFieldValue<T>(
+            string header,
+            IList<string> currentRow,
+            int rowIndex,
+            Action<string> onError,
+            T currentResult,
+            ConvertContext context)
+        {
+            try
+            {
+                context.Accessor.Value[currentResult] = context.Accessor.Type.Convert(currentRow[context.ColumnIndex]);
+            }
+            catch (ArgumentException)
+            {
+                var errorMessage = $"Invalid format in record '{rowIndex}' and field {header}";
+                if (onError == null) throw new FormatException(errorMessage);
+                onError(errorMessage);
             }
 
             return currentResult;
