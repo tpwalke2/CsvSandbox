@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Csv.Attributes;
 using NUnit.Framework;
 
 namespace Csv.Tests.CsvConvertTests
