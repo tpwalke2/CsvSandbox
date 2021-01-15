@@ -4,10 +4,10 @@ using System.Reflection;
 using Csv.Extensions;
 using NUnit.Framework;
 
-namespace Csv.Tests
+namespace Csv.Tests.CsvConvertTests
 {
     [TestFixture]
-    public class CsvConvert_ShouldHandleSimpleClass
+    public class DeserializeFixture
     {
         [Test]
         public void DeserializeEmptyString()
@@ -30,6 +30,69 @@ namespace Csv.Tests
             const string input = @"Count,Flag,Description
 5,true,""This is the description""";
             var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
+        public void Deserialize_DifferentSeparator()
+        {
+            const string input = @"Count!Flag!Description
+5!true!""This is the description""";
+            var result = CsvConvert.DeserializeObject<SimpleExample>(input, new CsvConvertSettings
+            {
+                Separator = '!'
+            });
+            
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
+        public void Deserialize_ShouldHonorPropertyAttribute()
+        {
+            const string input = @"count,flag,desc
+5,true,""This is the description""";
+            var result = CsvConvert.DeserializeObject<PropertyAttributeExample>(input);
+            
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
+        public void DeserializeRecord()
+        {
+            const string input = @"Count,Flag,Description
+5,true,""This is the description""";
+            var result = CsvConvert.DeserializeObject<RecordExample>(input);
+            
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
+        public void Deserialize_ShouldHonorIgnoreAttribute()
+        {
+            const string input = @"Count,Flag,Description
+5,true,""This is the description""";
+            var result = CsvConvert.DeserializeObject<IgnoreAttributeExample>(input);
+            
+            Assert.That(result.Count, Is.EqualTo(0));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
+        public void DeserializeStruct()
+        {
+            const string input = @"Count,Flag,Description
+5,true,""This is the description""";
+            var result = CsvConvert.DeserializeObject<StructExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -95,7 +158,7 @@ namespace Csv.Tests
 
             CsvConvert.DeserializeObject<SimpleExample>(input, new CsvConvertSettings
             {
-                OnError = (errorMessage) => onErrorWasCalled = true
+                OnError = errorMessage => onErrorWasCalled = true
             });
             
             Assert.That(onErrorWasCalled, Is.True);
@@ -120,7 +183,9 @@ namespace Csv.Tests
 5,""This is the description""";
             var result = CsvConvert.DeserializeObject<AccessModifierExample>(input);
 
-            var privateAccessors = typeof(AccessModifierExample).GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic);
+            var privateAccessors = typeof(AccessModifierExample)
+                                   .GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic)
+                                   .ToDictionary(gs => gs.Name, gs => gs);
             
             Assert.That(privateAccessors["Count"].Value[result], Is.EqualTo(0));
             Assert.That(result.Description, Is.EqualTo("This is the description"));
@@ -133,24 +198,12 @@ namespace Csv.Tests
 true,""This is the description""";
             var result = CsvConvert.DeserializeObject<AccessModifierExample>(input);
 
-            var privateAccessors = typeof(AccessModifierExample).GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic);
+            var privateAccessors = typeof(AccessModifierExample)
+                                   .GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic)
+                                   .ToDictionary(gs => gs.Name, gs => gs);
             
             Assert.That(privateAccessors["Flag"].Value[result], Is.False);
             Assert.That(result.Description, Is.EqualTo("This is the description"));
         }
-    }
-
-    public class AccessModifierExample
-    {
-        private int Count { get; set; }
-        protected bool Flag { get; set; }
-        public string Description { get; set; }
-    }
-    
-    public class SimpleExample
-    {
-        public int Count { get; set; }
-        public bool Flag { get; set; }
-        public string Description { get; set; }
     }
 }

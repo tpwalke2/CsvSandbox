@@ -2,10 +2,10 @@ using System;
 
 namespace Csv.Parser
 {
-    public class Settings
+    public sealed record Settings
     {
-        public char Separator { get; set; } = ',';
-        public bool TrimWhitespace { get; set; }
-        public Action<int, int> OnError { get; set; }
+        public char Separator { get; init; } = ',';
+        public bool TrimWhitespace { get; init; }
+        public Action<int, int> OnError { get; init; }
     }
 }

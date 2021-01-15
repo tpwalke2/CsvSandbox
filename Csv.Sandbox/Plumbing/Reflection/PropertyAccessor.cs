@@ -3,23 +3,25 @@ using System.Reflection;
 
 namespace Csv.Plumbing.Reflection
 {
-    public class PropertyAccessor : ValueAccessor
+    public class PropertyAccessor : ValueAccessor<PropertyInfo>
     {
-        private readonly PropertyInfo _propertyInfo;
-
         public PropertyAccessor(PropertyInfo propertyInfo)
         {
-            _propertyInfo = propertyInfo;
+            InnerInfo = propertyInfo;
         }
 
-        public override string Name => _propertyInfo.Name;
-        public override Type Type => _propertyInfo.PropertyType;
+        public override Type Type => InnerInfo.PropertyType;
 
         protected override void SetValue(
             object obj,
-            object value) {_propertyInfo.SetValue(obj, value);}
+            object value)
+        {
+            InnerInfo.SetValue(obj, value);
+        }
 
-        protected override object GetValue(
-            object obj) {return _propertyInfo.GetValue(obj);}
+        protected override object GetValue(object obj)
+        {
+            return InnerInfo.GetValue(obj);
+        }
     }
 }

@@ -71,7 +71,7 @@ namespace Csv.Tests.Parser
             Assert.That(result[0][2], Is.EqualTo("E350"));
             Assert.That(result[0][3], Is.EqualTo("Super, \"luxurious\" truck"));
         }
-        
+
         [Test]
         public void Parse_ShouldAllowNewLinesInQuotedField()
         {
@@ -116,7 +116,7 @@ they are going fast"));
         public void Parse_ShouldAllowDifferentSeparator()
         {
             const string input  = "1997!Ford!E350!\"Super! luxurious truck\"";
-            var result = Csv.Parser.Parser.Parse(input, new Settings()
+            var result = Csv.Parser.Parser.Parse(input, new Settings
             {
                 Separator = '!'
             });
@@ -130,7 +130,7 @@ they are going fast"));
         public void Parse_ShouldAllowOptionToTrimWhitespace()
         {
             const string input  = " 1997 , Ford , E350 ";
-            var result = Csv.Parser.Parser.Parse(input, new Settings()
+            var result = Csv.Parser.Parser.Parse(input, new Settings
             {
                 TrimWhitespace = true
             });
@@ -152,7 +152,7 @@ they are going fast"));
             const string input = "\"Super! \"luxurious truck\"";
             var actualLineNumber = 0;
             var actualColumn = 0;
-            Csv.Parser.Parser.Parse(input, new Settings()
+            Csv.Parser.Parser.Parse(input, new Settings
             {
                 OnError = (lineNumber, column) =>
                 {
@@ -171,7 +171,7 @@ they are going fast"));
             const string input = "1,\"Bad \" Field\"";
             var actualLineNumber = 0;
             var actualColumn = 0;
-            Csv.Parser.Parser.Parse(input, new Settings()
+            Csv.Parser.Parser.Parse(input, new Settings
             {
                 OnError = (lineNumber, column) =>
                 {
@@ -189,7 +189,7 @@ they are going fast"));
         {
             const string input = "Row1\n\"Bad \" Field\"";
             var actualLineNumber = 0;
-            Csv.Parser.Parser.Parse(input, new Settings()
+            Csv.Parser.Parser.Parse(input, new Settings
             {
                 OnError = (lineNumber, column) =>
                 {
