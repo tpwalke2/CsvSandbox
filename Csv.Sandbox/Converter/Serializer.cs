@@ -7,14 +7,14 @@ namespace Csv.Converter
 {
     internal static class Serializer
     {
-        public static string SerializeObject<T>(T input, CsvConvertSettings settings = null)
+        public static string Serialize<T>(T input, CsvConvertSettings settings = null)
         {
             return input == null
                 ? ""
-                : SerializeObjects(new[] {input}, settings);
+                : SerializeList(new[] {input}, settings);
         }
 
-        public static string SerializeObjects<T>(IEnumerable<T> input, CsvConvertSettings settings = null)
+        public static string SerializeList<T>(IEnumerable<T> input, CsvConvertSettings settings = null)
         {
             if (input == null) return "";
             

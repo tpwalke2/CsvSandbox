@@ -9,7 +9,8 @@ namespace Csv.Tests.CsvConvertTests
         [Test]
         public void SerializeNull()
         {
-            var result = CsvConvert.SerializeObject<SimpleExample>(null);
+            SimpleExample input = null;
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(""));
         }
 
@@ -20,7 +21,7 @@ namespace Csv.Tests.CsvConvertTests
             const string expected = @"Item1,Item2
 5,True";
             var input  = (Count: 5, Flag: true);
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -30,7 +31,7 @@ namespace Csv.Tests.CsvConvertTests
             const string expected = @"Item1,Item2
 5,True";
             var input  = (5, true);
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -47,7 +48,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -64,7 +65,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "Hi!"
             };
             
-            var result = CsvConvert.SerializeObject(input, new CsvConvertSettings
+            var result = CsvConvert.Serialize(input, new CsvConvertSettings
             {
                 Separator = '!'
             });
@@ -84,7 +85,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input, new CsvConvertSettings
+            var result = CsvConvert.Serialize(input, new CsvConvertSettings
             {
                 Separator = '!'
             });
@@ -104,7 +105,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -121,7 +122,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -138,7 +139,7 @@ namespace Csv.Tests.CsvConvertTests
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -155,7 +156,7 @@ True,""This is the description""";
                 Description = "This is the description"
             };
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
@@ -167,7 +168,7 @@ True,""This is the description""";
 
             var input = new AccessModifierExample(5, true, "This is the description");
             
-            var result = CsvConvert.SerializeObject(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
 
@@ -194,14 +195,15 @@ True,""This is the description""";
                 }
             };
             
-            var result = CsvConvert.SerializeObjects(input);
+            var result = CsvConvert.Serialize(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         
         [Test]
         public void SerializeMultipleObjects_NullInput()
         {
-            var result = CsvConvert.SerializeObjects<SimpleExample>(null);
+            IEnumerable<SimpleExample> input = null;
+            var result = CsvConvert.SerializeList(input);
             Assert.That(result, Is.EqualTo(""));
         }
     }

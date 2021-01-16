@@ -9,13 +9,13 @@ namespace Csv.Converter
 {
     internal static class Deserializer
     {
-        public static T DeserializeObject<T>(string input, CsvConvertSettings settings = null) where T : new()
+        public static T Deserialize<T>(string input, CsvConvertSettings settings = null) where T : new()
         {
-            return DeserializeObjects<T>(input, settings)
+            return DeserializeList<T>(input, settings)
                 .FirstOrDefault();
         }
 
-        public static IEnumerable<T> DeserializeObjects<T>(string input, CsvConvertSettings settings = null)
+        public static IEnumerable<T> DeserializeList<T>(string input, CsvConvertSettings settings = null)
             where T : new()
         {
             settings ??= new CsvConvertSettings();

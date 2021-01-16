@@ -12,7 +12,7 @@ namespace Csv.Tests.CsvConvertTests
         [Test]
         public void DeserializeEmptyString()
         {
-            var result = CsvConvert.DeserializeObject<SimpleExample>("");
+            var result = CsvConvert.Deserialize<SimpleExample>("");
             Assert.That(result, Is.SameAs(default(SimpleExample)));
         }
         
@@ -20,7 +20,7 @@ namespace Csv.Tests.CsvConvertTests
         public void DeserializeNoEntriesOnlyHeader()
         {
             const string input = @"Count,Flag,Description";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            var result = CsvConvert.Deserialize<SimpleExample>(input);
             Assert.That(result, Is.SameAs(default(SimpleExample)));
         }
         
@@ -29,7 +29,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count,Flag,Description
 5,true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            var result = CsvConvert.Deserialize<SimpleExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -41,7 +41,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count!Flag!Description
 5!true!""This is the description""";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input, new CsvConvertSettings
+            var result = CsvConvert.Deserialize<SimpleExample>(input, new CsvConvertSettings
             {
                 Separator = '!'
             });
@@ -56,7 +56,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"count,flag,desc
 5,true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<PropertyAttributeExample>(input);
+            var result = CsvConvert.Deserialize<PropertyAttributeExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -68,7 +68,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count,Flag,Description
 5,true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<RecordExample>(input);
+            var result = CsvConvert.Deserialize<RecordExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -80,7 +80,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count,Flag,Description
 5,true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<IgnoreAttributeExample>(input);
+            var result = CsvConvert.Deserialize<IgnoreAttributeExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(0));
             Assert.That(result.Flag, Is.True);
@@ -92,7 +92,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count,Flag,Description
 5,true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<StructExample>(input);
+            var result = CsvConvert.Deserialize<StructExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -105,7 +105,7 @@ namespace Csv.Tests.CsvConvertTests
             const string input = @"Count,Flag,Description
 5,true,""This is the description""
 10,false,""This is another description""";
-            var result = CsvConvert.DeserializeObjects<SimpleExample>(input).ToList();
+            var result = CsvConvert.DeserializeList<SimpleExample>(input).ToList();
             
             Assert.That(result.Count, Is.EqualTo(2));
             Assert.That(result[0].Count, Is.EqualTo(5));
@@ -121,7 +121,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count
 5";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            var result = CsvConvert.Deserialize<SimpleExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.False);
@@ -133,7 +133,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Description,Count,Flag
 ""This is the description"",5,true";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            var result = CsvConvert.Deserialize<SimpleExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(5));
             Assert.That(result.Flag, Is.True);
@@ -145,7 +145,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count
 ""This is the description""";
-            Assert.Throws<FormatException>(() => CsvConvert.DeserializeObject<SimpleExample>(input));
+            Assert.Throws<FormatException>(() => CsvConvert.Deserialize<SimpleExample>(input));
         }
         
         [Test]
@@ -156,7 +156,7 @@ namespace Csv.Tests.CsvConvertTests
 
             var onErrorWasCalled = false;
 
-            CsvConvert.DeserializeObject<SimpleExample>(input, new CsvConvertSettings
+            CsvConvert.Deserialize<SimpleExample>(input, new CsvConvertSettings
             {
                 OnError = errorMessage => onErrorWasCalled = true
             });
@@ -169,7 +169,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Description,ID
 ""This is the description"",5";
-            var result = CsvConvert.DeserializeObject<SimpleExample>(input);
+            var result = CsvConvert.Deserialize<SimpleExample>(input);
             
             Assert.That(result.Count, Is.EqualTo(0));
             Assert.That(result.Flag, Is.False);
@@ -181,7 +181,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Count,Description
 5,""This is the description""";
-            var result = CsvConvert.DeserializeObject<AccessModifierExample>(input);
+            var result = CsvConvert.Deserialize<AccessModifierExample>(input);
 
             var privateAccessors = typeof(AccessModifierExample)
                                    .GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic)
@@ -196,7 +196,7 @@ namespace Csv.Tests.CsvConvertTests
         {
             const string input = @"Flag,Description
 true,""This is the description""";
-            var result = CsvConvert.DeserializeObject<AccessModifierExample>(input);
+            var result = CsvConvert.Deserialize<AccessModifierExample>(input);
 
             var privateAccessors = typeof(AccessModifierExample)
                                    .GetAccessors(BindingFlags.Instance | BindingFlags.NonPublic)

@@ -5,25 +5,25 @@ namespace Csv
 {
     public static class CsvConvert
     {
-        public static string SerializeObject<T>(T input, CsvConvertSettings settings = null)
+        public static string Serialize<T>(T input, CsvConvertSettings settings = null)
         {
-            return Serializer.SerializeObject(input, settings);
+            return Serializer.Serialize(input, settings);
         }
 
-        public static string SerializeObjects<T>(IEnumerable<T> input, CsvConvertSettings settings = null)
+        public static string SerializeList<T>(IEnumerable<T> input, CsvConvertSettings settings = null)
         {
-            return Serializer.SerializeObjects(input, settings);
+            return Serializer.SerializeList(input, settings);
         }
         
-        public static T DeserializeObject<T>(string input, CsvConvertSettings settings = null) where T : new()
+        public static T Deserialize<T>(string input, CsvConvertSettings settings = null) where T : new()
         {
-            return Deserializer.DeserializeObject<T>(input, settings);
+            return Deserializer.Deserialize<T>(input, settings);
         }
 
-        public static IEnumerable<T> DeserializeObjects<T>(string input, CsvConvertSettings settings = null)
+        public static IEnumerable<T> DeserializeList<T>(string input, CsvConvertSettings settings = null)
             where T : new()
         {
-            return Deserializer.DeserializeObjects<T>(input, settings);
+            return Deserializer.DeserializeList<T>(input, settings);
         }
     }
 }
