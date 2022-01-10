@@ -18,7 +18,7 @@ The parser does not attempt to impart meaning to the CSV. It merely splits an in
 
 The parser understands strings that are surrounded by double-quotes ("), but will strip off the double-quotes when populating the field value.
 
-Although this project focuses on CSV, the 'C' can be changed to any separator via an optional `Settings` object.
+Although this project focuses on CSV, the default comma separator can be changed to any separator via an optional `Settings` object.
 
 The `TrimWhitespace` settings flag tells the parser to remove whitespace around field values.
 
