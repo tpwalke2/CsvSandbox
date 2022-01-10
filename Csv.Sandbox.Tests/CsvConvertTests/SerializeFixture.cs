@@ -53,6 +53,22 @@ namespace Csv.Tests.CsvConvertTests
         }
         
         [Test]
+        public void Serialize_ShouldNotEmitHeader()
+        {
+            const string expected = @"5,True,""This is the description""";
+
+            var input = new SimpleExample
+            {
+                Count       = 5,
+                Flag        = true,
+                Description = "This is the description"
+            };
+            
+            var result = CsvConvert.Serialize(input, new CsvConvertSettings {EmitHeader = false});
+            Assert.That(result, Is.EqualTo(expected));
+        }
+        
+        [Test]
         public void Serialize_EscapeStringsWithSeparator()
         {
             const string expected = @"Count!Flag!Description
@@ -99,6 +115,23 @@ namespace Csv.Tests.CsvConvertTests
 5,True,""This is the description""";
 
             var input = new PropertyAttributeExample
+            {
+                Count       = 5,
+                Flag        = true,
+                Description = "This is the description"
+            };
+            
+            var result = CsvConvert.Serialize(input);
+            Assert.That(result, Is.EqualTo(expected));
+        }
+        
+        [Test]
+        public void Serialize_ShouldEscapePropertyNames()
+        {
+            const string expected = @"""The Count"",""A Flag"",""A Description""
+5,True,""This is the description""";
+
+            var input = new EscapedPropertyAttributeExample
             {
                 Count       = 5,
                 Flag        = true,
@@ -195,7 +228,7 @@ True,""This is the description""";
                 }
             };
             
-            var result = CsvConvert.Serialize(input);
+            var result = CsvConvert.SerializeList(input);
             Assert.That(result, Is.EqualTo(expected));
         }
         

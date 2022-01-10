@@ -6,5 +6,6 @@ namespace Csv
     {
         public Action<string> OnError { get; init; }
         public char Separator { get; init; } = ',';
+        public bool EmitHeader { get; init; } = true;
     }
 }

@@ -23,11 +23,15 @@ namespace Csv.Converter
             var accessors = typeof(T)
                             .GetAccessors()
                             .ToList();
+
+            var lines = new List<string>();
             
-            var lines = new List<string>
+            if (settings.EmitHeader)
             {
-                string.Join(settings.Separator, accessors.Select(x => x.Name))
-            };
+                lines.Add(string.Join(settings.Separator,
+                                      accessors
+                                          .Select(x => SanitizeOutput(x.Name, settings.Separator))));
+            }
 
             lines.AddRange(input
                                .Select(item => string.Join(
@@ -37,7 +41,7 @@ namespace Csv.Converter
                                                            x.Value[item].ToString(),
                                                            settings.Separator)))));
 
-            return lines.Count == 1 
+            return lines.Count == (settings.EmitHeader ? 1 : 0)
                 ? ""
                 : string.Join(Environment.NewLine, lines);
         }

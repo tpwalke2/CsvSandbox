@@ -64,6 +64,18 @@ namespace Csv.Tests.CsvConvertTests
         }
         
         [Test]
+        public void Deserialize_ShouldHandleEscapedPropertyNamesAttribute()
+        {
+            const string input = @"""The Count"",""A Flag"",""A Description""
+5,True,""This is the description""";
+            var result = CsvConvert.Deserialize<EscapedPropertyAttributeExample>(input);
+            
+            Assert.That(result.Count, Is.EqualTo(5));
+            Assert.That(result.Flag, Is.True);
+            Assert.That(result.Description, Is.EqualTo("This is the description"));
+        }
+        
+        [Test]
         public void DeserializeRecord()
         {
             const string input = @"Count,Flag,Description

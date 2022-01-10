@@ -33,6 +33,16 @@ namespace Csv.Tests.CsvConvertTests
         [CsvProperty(PropertyName = "desc")]
         public string Description { get; set; }
     }
+    
+    public class EscapedPropertyAttributeExample
+    {
+        [CsvProperty("The Count")]
+        public int Count { get; set; }
+        [CsvProperty(PropertyName = "A Flag")]
+        public bool Flag { get; set; }
+        [CsvProperty(PropertyName = "A Description")]
+        public string Description { get; set; }
+    }
 
     public class AccessModifierExample
     {
