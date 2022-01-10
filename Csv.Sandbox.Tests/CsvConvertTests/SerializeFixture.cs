@@ -9,8 +9,7 @@ namespace Csv.Tests.CsvConvertTests
         [Test]
         public void SerializeNull()
         {
-            SimpleExample input = null;
-            var result = CsvConvert.Serialize(input);
+            var result = CsvConvert.Serialize((SimpleExample)null);
             Assert.That(result, Is.EqualTo(""));
         }
 
@@ -235,8 +234,7 @@ True,""This is the description""";
         [Test]
         public void SerializeMultipleObjects_NullInput()
         {
-            IEnumerable<SimpleExample> input = null;
-            var result = CsvConvert.SerializeList(input);
+            var result = CsvConvert.SerializeList((IEnumerable<SimpleExample>)null);
             Assert.That(result, Is.EqualTo(""));
         }
     }

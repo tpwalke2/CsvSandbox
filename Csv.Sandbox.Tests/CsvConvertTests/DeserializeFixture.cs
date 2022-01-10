@@ -170,7 +170,7 @@ namespace Csv.Tests.CsvConvertTests
 
             CsvConvert.Deserialize<SimpleExample>(input, new CsvConvertSettings
             {
-                OnError = errorMessage => onErrorWasCalled = true
+                OnError = _ => onErrorWasCalled = true
             });
             
             Assert.That(onErrorWasCalled, Is.True);

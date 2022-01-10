@@ -191,7 +191,7 @@ they are going fast"));
             var actualLineNumber = 0;
             Csv.Parser.Parser.Parse(input, new Settings
             {
-                OnError = (lineNumber, column) =>
+                OnError = (lineNumber, _) =>
                 {
                     actualLineNumber = lineNumber;
                 }
