@@ -1,10 +1,9 @@
-namespace Csv.Parser.States
+namespace Csv.Parser.States;
+
+public interface IState
 {
-    public interface IState
-    {
-        IState Process(
-            char ch,
-            Settings settings,
-            Context context);
-    }
+    IState Process(
+        char ch,
+        Settings settings,
+        Context context);
 }

@@ -1,22 +1,21 @@
 using System;
 
-namespace Csv.Plumbing
+namespace Csv.Plumbing;
+
+public class IndexedProperty<TIndex, TValue>
 {
-    public class IndexedProperty<TIndex, TValue>
+    private readonly Action<TIndex, TValue> _setAction;
+    private readonly Func<TIndex, TValue> _getFunc;
+
+    public IndexedProperty(Func<TIndex, TValue> getFunc, Action<TIndex, TValue> setAction)
     {
-        private readonly Action<TIndex, TValue> _setAction;
-        private readonly Func<TIndex, TValue> _getFunc;
+        _getFunc   = getFunc;
+        _setAction = setAction;
+    }
 
-        public IndexedProperty(Func<TIndex, TValue> getFunc, Action<TIndex, TValue> setAction)
-        {
-            _getFunc   = getFunc;
-            _setAction = setAction;
-        }
-
-        public TValue this[TIndex i]
-        {
-            get => _getFunc(i);
-            set => _setAction(i, value);
-        }
+    public TValue this[TIndex i]
+    {
+        get => _getFunc(i);
+        set => _setAction(i, value);
     }
 }
