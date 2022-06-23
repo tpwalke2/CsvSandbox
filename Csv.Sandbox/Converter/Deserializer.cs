@@ -50,18 +50,20 @@ internal static class Deserializer
         int rowIndex,
         Action<string> onError = null) where T : new()
     {
-        return Enumerable.Range(0, headers.Count)
-                         .Where(columnIndex => accessors.ContainsKey(headers[columnIndex]))
-                         .Select(columnIndex => new ConvertContext(columnIndex, accessors[headers[columnIndex]]))
-                         .Aggregate(
-                             new T(),
-                             (current, next) => ApplyFieldValue(
-                                 headers[next.ColumnIndex],
-                                 currentRow,
-                                 rowIndex,
-                                 onError,
-                                 current,
-                                 next));
+        var boxedResult = Enumerable.Range(0, headers.Count)
+                                    .Where(columnIndex => accessors.ContainsKey(headers[columnIndex]))
+                                    .Select(columnIndex =>
+                                                new ConvertContext(columnIndex, accessors[headers[columnIndex]]))
+                                    .Aggregate(
+                                        (object)Activator.CreateInstance<T>(),
+                                        (current, next) => ApplyFieldValue(
+                                            headers[next.ColumnIndex],
+                                            currentRow,
+                                            rowIndex,
+                                            onError,
+                                            current,
+                                            next));
+        return (T)boxedResult;
     }
 
     private class ConvertContext
@@ -86,7 +88,7 @@ internal static class Deserializer
     {
         try
         {
-            context.Accessor.Value[currentResult] = context.Accessor.Type.Convert(currentRow[context.ColumnIndex]);
+            context.Accessor.Value[currentResult] = ConvertValue(currentRow, context);
         }
         catch (ArgumentException)
         {
@@ -96,5 +98,12 @@ internal static class Deserializer
         }
 
         return currentResult;
+    }
+
+    private static object ConvertValue(IList<string> currentRow, ConvertContext context)
+    {
+        return context.Accessor.Type.IsEnum
+            ? currentRow[context.ColumnIndex].AsEnum(context.Accessor.Type)
+            : context.Accessor.Type.Convert(currentRow[context.ColumnIndex]);
     }
 }

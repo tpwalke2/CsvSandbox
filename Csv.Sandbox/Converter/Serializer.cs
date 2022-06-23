@@ -30,15 +30,15 @@ internal static class Serializer
         {
             lines.Add(string.Join(settings.Separator,
                                   accessors
-                                      .Select(x => SanitizeOutput(x.Name, settings.Separator))));
+                                      .Select(accessor => SanitizeOutput(accessor.Name, settings.Separator))));
         }
 
         lines.AddRange(input
                            .Select(item => string.Join(
                                        settings.Separator,
                                        accessors
-                                           .Select(x => SanitizeOutput(
-                                                       x.Value[item].ToString(),
+                                           .Select(accessor => SanitizeOutput(
+                                                       accessor.ToString(item),
                                                        settings.Separator)))));
 
         return lines.Count == (settings.EmitHeader ? 1 : 0)

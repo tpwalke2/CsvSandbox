@@ -2,14 +2,21 @@ using Csv.Attributes;
 
 namespace Csv.Tests.CsvConvertTests;
 
-public class StructExample
+public struct StructExample
 {
+    public StructExample()
+    {
+        Count       = 0;
+        Flag        = false;
+        Description = "";
+    }
+    
     public int Count { get; set; }
     public bool Flag { get; set; }
     public string Description { get; set; }
 }
 
-public class RecordExample
+public record RecordExample
 {
     public int Count { get; set; }
     public bool Flag { get; set; }
@@ -65,4 +72,17 @@ public class SimpleExample
     public int Count { get; set; }
     public bool Flag { get; set; }
     public string Description { get; set; }
+}
+
+public class EnumExample
+{
+    public ExampleStatuses Status { get; set; }
+}
+
+public enum ExampleStatuses
+{
+    ToDo = 0,
+    [CsvEnum("In Progress")]
+    InProgress,
+    Done
 }

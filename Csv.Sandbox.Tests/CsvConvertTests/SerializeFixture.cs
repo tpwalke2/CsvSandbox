@@ -50,6 +50,23 @@ public class SerializeFixture
         var result = CsvConvert.Serialize(input);
         Assert.That(result, Is.EqualTo(expected));
     }
+    
+    [Test]
+    public void Serialize_ShouldEscapeDoubleQuote()
+    {
+        const string expected = @"Count,Flag,Description
+5,True,""This is a quote""""";
+
+        var input = new SimpleExample
+        {
+            Count       = 5,
+            Flag        = true,
+            Description = "This is a quote\""
+        };
+        
+        var result = CsvConvert.Serialize(input);
+        Assert.That(result, Is.EqualTo(expected));
+    }
         
     [Test]
     public void Serialize_ShouldNotEmitHeader()
@@ -236,5 +253,37 @@ True,""This is the description""";
     {
         var result = CsvConvert.SerializeList((IEnumerable<SimpleExample>)null);
         Assert.That(result, Is.EqualTo(""));
+    }
+    
+    [Test]
+    public void SerializeShouldHonorEnums()
+    {
+        var input = new EnumExample
+        {
+            Status = ExampleStatuses.Done
+        };
+        
+        const string expected = @"Status
+Done";
+        
+        var result = CsvConvert.Serialize(input);
+        
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public void SerializeShouldHonorEnumDescriptions()
+    {
+        var input = new EnumExample
+        {
+            Status = ExampleStatuses.InProgress
+        };
+        
+        const string expected = @"Status
+""In Progress""";
+        
+        var result = CsvConvert.Serialize(input);
+        
+        Assert.That(result, Is.EqualTo(expected));
     }
 }

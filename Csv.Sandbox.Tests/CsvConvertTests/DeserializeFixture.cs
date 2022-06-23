@@ -86,6 +86,19 @@ public class DeserializeFixture
         Assert.That(result.Flag, Is.True);
         Assert.That(result.Description, Is.EqualTo("This is the description"));
     }
+    
+    [Test]
+    public void Deserialize_ShouldHonorEscapeDoubleQuote()
+    {
+        const string input = @"Count,Flag,Description
+5,True,""This is a quote""""";
+
+        var result = CsvConvert.Deserialize<SimpleExample>(input);
+        
+        Assert.That(result.Count, Is.EqualTo(5));
+        Assert.That(result.Flag, Is.True);
+        Assert.That(result.Description, Is.EqualTo("This is a quote\""));
+    }
         
     [Test]
     public void Deserialize_ShouldHonorIgnoreAttribute()
@@ -216,5 +229,25 @@ true,""This is the description""";
             
         Assert.That(privateAccessors["Flag"].Value[result], Is.False);
         Assert.That(result.Description, Is.EqualTo("This is the description"));
+    }
+
+    [Test]
+    public void DeserializeShouldHonorEnums()
+    {
+        const string input = @"Status
+Done";
+        var result = CsvConvert.Deserialize<EnumExample>(input);
+        
+        Assert.That(result.Status, Is.EqualTo(ExampleStatuses.Done));
+    }
+    
+    [Test]
+    public void DeserializeShouldHonorEnumDescriptions()
+    {
+        const string input = @"Status
+""In Progress""";
+        var result = CsvConvert.Deserialize<EnumExample>(input);
+        
+        Assert.That(result.Status, Is.EqualTo(ExampleStatuses.InProgress));
     }
 }
