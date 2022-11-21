@@ -19,9 +19,11 @@ public static class Parser
         Settings settings,
         Context context)
     {
-        input.Aggregate(
+        var finalState = input.Aggregate(
             ParseStates.Start,
             (current, ch) => current.Process(ch, settings, context));
+
+        if (finalState == ParseStates.Error) finalState.Process(default, settings, context);
 
         ParseStates.Cleanup.Process(default, settings, context);
 

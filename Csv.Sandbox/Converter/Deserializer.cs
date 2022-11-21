@@ -66,17 +66,7 @@ internal static class Deserializer
         return (T)boxedResult;
     }
 
-    private class ConvertContext
-    {
-        public ConvertContext(int columnIndex, ValueAccessor accessor)
-        {
-            ColumnIndex = columnIndex;
-            Accessor    = accessor;
-        }
-
-        public int ColumnIndex { get; }
-        public ValueAccessor Accessor { get; }
-    }
+    private sealed record ConvertContext(int ColumnIndex, ValueAccessor Accessor);
 
     private static T ApplyFieldValue<T>(
         string header,

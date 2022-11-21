@@ -41,7 +41,9 @@ internal static class Serializer
                                                        accessor.ToString(item),
                                                        settings.Separator)))));
 
-        return lines.Count == (settings.EmitHeader ? 1 : 0)
+        var headerLinesToSkip = settings.EmitHeader ? 1 : 0;
+        
+        return lines.Count == headerLinesToSkip
             ? ""
             : string.Join(Environment.NewLine, lines);
     }
