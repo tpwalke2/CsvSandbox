@@ -48,23 +48,24 @@ internal static class Deserializer
         IDictionary<string, ValueAccessor> accessors,
         IList<string> currentRow,
         int rowIndex,
-        Action<string> onError = null) where T : new()
-    {
-        var boxedResult = Enumerable.Range(0, headers.Count)
-                                    .Where(columnIndex => accessors.ContainsKey(headers[columnIndex]))
-                                    .Select(columnIndex =>
-                                                new ConvertContext(columnIndex, accessors[headers[columnIndex]]))
-                                    .Aggregate(
-                                        (object)Activator.CreateInstance<T>(),
-                                        (current, next) => ApplyFieldValue(
-                                            headers[next.ColumnIndex],
-                                            currentRow,
-                                            rowIndex,
-                                            onError,
-                                            current,
-                                            next));
-        return (T)boxedResult;
-    }
+        Action<string> onError = null) where T : new() => (T)Enumerable
+                                                             .Range(0, headers.Count)
+                                                             .Where(columnIndex =>
+                                                                        accessors.ContainsKey(
+                                                                            headers[columnIndex]))
+                                                             .Select(columnIndex =>
+                                                                         new ConvertContext(
+                                                                             columnIndex,
+                                                                             accessors[headers[columnIndex]]))
+                                                             .Aggregate(
+                                                                 (object)Activator.CreateInstance<T>(),
+                                                                 (current, next) => ApplyFieldValue(
+                                                                     headers[next.ColumnIndex],
+                                                                     currentRow,
+                                                                     rowIndex,
+                                                                     onError,
+                                                                     current,
+                                                                     next));
 
     private sealed record ConvertContext(int ColumnIndex, ValueAccessor Accessor);
 
@@ -90,10 +91,7 @@ internal static class Deserializer
         return currentResult;
     }
 
-    private static object ConvertValue(IList<string> currentRow, ConvertContext context)
-    {
-        return context.Accessor.Type.IsEnum
-            ? currentRow[context.ColumnIndex].AsEnum(context.Accessor.Type)
-            : context.Accessor.Type.Convert(currentRow[context.ColumnIndex]);
-    }
+    private static object ConvertValue(IList<string> currentRow, ConvertContext context) => context.Accessor.Type.IsEnum
+        ? currentRow[context.ColumnIndex].AsEnum(context.Accessor.Type)
+        : context.Accessor.Type.Convert(currentRow[context.ColumnIndex]);
 }

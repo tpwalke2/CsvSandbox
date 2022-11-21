@@ -6,13 +6,10 @@ namespace Csv.Parser;
 
 public static class Parser
 {
-    public static IList<IList<string>> Parse(string input, Settings settings = null)
-    {
-        return DoParse(
-            input,
-            settings ?? new Settings(),
-            new Context());
-    }
+    public static IList<IList<string>> Parse(string input, Settings settings = null) => DoParse(
+        input,
+        settings ?? new Settings(),
+        new Context());
 
     private static IList<IList<string>> DoParse(
         string input,

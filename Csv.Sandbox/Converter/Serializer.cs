@@ -7,12 +7,9 @@ namespace Csv.Converter;
 
 internal static class Serializer
 {
-    public static string Serialize<T>(T input, CsvConvertSettings settings = null)
-    {
-        return input == null
-            ? ""
-            : SerializeList(new[] {input}, settings);
-    }
+    public static string Serialize<T>(T input, CsvConvertSettings settings = null) => input == null
+        ? ""
+        : SerializeList(new[] { input }, settings);
 
     public static string SerializeList<T>(IEnumerable<T> input, CsvConvertSettings settings = null)
     {
@@ -48,10 +45,8 @@ internal static class Serializer
             : string.Join(Environment.NewLine, lines);
     }
 
-    private static string SanitizeOutput(string input, char separator)
-    {
-        return input.IndexOfAny(new[] {' ', separator}) == -1
+    private static string SanitizeOutput(string input, char separator) =>
+        input.IndexOfAny(new[] { ' ', separator }) == -1
             ? input
             : $"\"{input}\"";
-    }    
 }
