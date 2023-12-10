@@ -19,7 +19,7 @@ public class DeserializeFixture
     [Test]
     public void DeserializeNoEntriesOnlyHeader()
     {
-        const string input  = @"Count,Flag,Description";
+        const string input  = "Count,Flag,Description";
         var          result = CsvConvert.Deserialize<SimpleExample>(input);
         Assert.That(result, Is.SameAs(default(SimpleExample)));
     }
@@ -27,8 +27,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeAllProperties()
     {
-        const string input = @"Count,Flag,Description
-5,true,""This is the description""";
+        const string input = """
+                             Count,Flag,Description
+                             5,true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<SimpleExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -39,8 +41,10 @@ public class DeserializeFixture
     [Test]
     public void Deserialize_DifferentSeparator()
     {
-        const string input = @"Count!Flag!Description
-5!true!""This is the description""";
+        const string input = """
+                             Count!Flag!Description
+                             5!true!"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<SimpleExample>(input, new CsvConvertSettings
         {
             Separator = '!'
@@ -54,8 +58,10 @@ public class DeserializeFixture
     [Test]
     public void Deserialize_ShouldHonorPropertyAttribute()
     {
-        const string input = @"count,flag,desc
-5,true,""This is the description""";
+        const string input = """
+                             count,flag,desc
+                             5,true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<PropertyAttributeExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -66,8 +72,10 @@ public class DeserializeFixture
     [Test]
     public void Deserialize_ShouldHandleEscapedPropertyNamesAttribute()
     {
-        const string input = @"""The Count"",""A Flag"",""A Description""
-5,True,""This is the description""";
+        const string input = """
+                             "The Count","A Flag","A Description"
+                             5,True,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<EscapedPropertyAttributeExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -78,8 +86,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeRecord()
     {
-        const string input = @"Count,Flag,Description
-5,true,""This is the description""";
+        const string input = """
+                             Count,Flag,Description
+                             5,true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<RecordExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -90,8 +100,10 @@ public class DeserializeFixture
     [Test]
     public void Deserialize_ShouldHonorEscapeDoubleQuote()
     {
-        const string input = @"Count,Flag,Description
-5,True,""This is a quote""""";
+        const string input = """
+                             Count,Flag,Description
+                             5,True,"This is a quote""
+                             """;
 
         var result = CsvConvert.Deserialize<SimpleExample>(input);
         
@@ -103,8 +115,10 @@ public class DeserializeFixture
     [Test]
     public void Deserialize_ShouldHonorIgnoreAttribute()
     {
-        const string input = @"Count,Flag,Description
-5,true,""This is the description""";
+        const string input = """
+                             Count,Flag,Description
+                             5,true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<IgnoreAttributeExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(0));
@@ -115,8 +129,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeStruct()
     {
-        const string input = @"Count,Flag,Description
-5,true,""This is the description""";
+        const string input = """
+                             Count,Flag,Description
+                             5,true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<StructExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -127,9 +143,11 @@ public class DeserializeFixture
     [Test]
     public void DeserializeMultipleInstances()
     {
-        const string input = @"Count,Flag,Description
-5,true,""This is the description""
-10,false,""This is another description""";
+        const string input = """
+                             Count,Flag,Description
+                             5,true,"This is the description"
+                             10,false,"This is another description"
+                             """;
         var result = CsvConvert.DeserializeList<SimpleExample>(input).ToList();
             
         Assert.That(result.Count, Is.EqualTo(2));
@@ -144,8 +162,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldHandleMissingProperties()
     {
-        const string input = @"Count
-5";
+        const string input = """
+                             Count
+                             5
+                             """;
         var result = CsvConvert.Deserialize<SimpleExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -156,8 +176,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldNotCareAboutInputOrder()
     {
-        const string input = @"Description,Count,Flag
-""This is the description"",5,true";
+        const string input = """
+                             Description,Count,Flag
+                             "This is the description",5,true
+                             """;
         var result = CsvConvert.Deserialize<SimpleExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(5));
@@ -168,16 +190,20 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldThrowErrorSomethingWithInvalidFormat()
     {
-        const string input = @"Count
-""This is the description""";
+        const string input = """
+                             Count
+                             "This is the description"
+                             """;
         Assert.Throws<FormatException>(() => CsvConvert.Deserialize<SimpleExample>(input));
     }
         
     [Test]
     public void DeserializeShouldThrowUseErrorCallbackIfProvided()
     {
-        const string input = @"Count
-""This is the description""";
+        const string input = """
+                             Count
+                             "This is the description"
+                             """;
 
         var onErrorWasCalled = false;
 
@@ -192,8 +218,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldIgnoreHeadersThatDoNotCorrespondWithAccessors()
     {
-        const string input = @"Description,ID
-""This is the description"",5";
+        const string input = """
+                             Description,ID
+                             "This is the description",5
+                             """;
         var result = CsvConvert.Deserialize<SimpleExample>(input);
             
         Assert.That(result.Count, Is.EqualTo(0));
@@ -204,8 +232,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldIgnorePrivateAccessors()
     {
-        const string input = @"Count,Description
-5,""This is the description""";
+        const string input = """
+                             Count,Description
+                             5,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<AccessModifierExample>(input);
 
         var privateAccessors = typeof(AccessModifierExample)
@@ -219,8 +249,10 @@ public class DeserializeFixture
     [Test]
     public void DeserializeShouldIgnoreProtectedAccessors()
     {
-        const string input = @"Flag,Description
-true,""This is the description""";
+        const string input = """
+                             Flag,Description
+                             true,"This is the description"
+                             """;
         var result = CsvConvert.Deserialize<AccessModifierExample>(input);
 
         var privateAccessors = typeof(AccessModifierExample)
@@ -234,8 +266,10 @@ true,""This is the description""";
     [Test]
     public void DeserializeShouldHonorEnums()
     {
-        const string input = @"Status
-Done";
+        const string input = """
+                             Status
+                             Done
+                             """;
         var result = CsvConvert.Deserialize<EnumExample>(input);
         
         Assert.That(result.Status, Is.EqualTo(ExampleStatuses.Done));
@@ -244,8 +278,10 @@ Done";
     [Test]
     public void DeserializeShouldHonorEnumDescriptions()
     {
-        const string input = @"Status
-""In Progress""";
+        const string input = """
+                             Status
+                             "In Progress"
+                             """;
         var result = CsvConvert.Deserialize<EnumExample>(input);
         
         Assert.That(result.Status, Is.EqualTo(ExampleStatuses.InProgress));

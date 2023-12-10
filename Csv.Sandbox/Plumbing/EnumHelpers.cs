@@ -17,7 +17,7 @@ public static class EnumHelpers
         .GetDescriptions()
         .Select(description => (value, description));
 
-    private static IDictionary<string, TResult> ToTypedDictionary<TResult>(
+    private static Dictionary<string, TResult> ToTypedDictionary<TResult>(
         this IEnumerable<(TResult Value, string Description)> input) => input.ToDictionary(
         x => x.Description,
         x => x.Value,

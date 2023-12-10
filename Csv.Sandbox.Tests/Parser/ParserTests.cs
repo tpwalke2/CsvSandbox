@@ -75,11 +75,15 @@ public class ParserTests
     [Test]
     public void Parse_ShouldAllowNewLinesInQuotedField()
     {
-        const string input = @"""Go get one now
-they are going fast""";
+        const string input = """
+                             "Go get one now
+                             they are going fast"
+                             """;
         var result = Csv.Parser.Parser.Parse(input);
-        Assert.That(result[0][0], Is.EqualTo(@"Go get one now
-they are going fast"));
+        Assert.That(result[0][0], Is.EqualTo("""
+                                             Go get one now
+                                             they are going fast
+                                             """));
     }
         
     [Test]

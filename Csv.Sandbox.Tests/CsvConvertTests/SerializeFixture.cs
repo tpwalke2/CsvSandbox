@@ -17,8 +17,10 @@ public class SerializeFixture
     public void SerializeAnonymousObject_NamedFields()
     {
         // this would look nicer if .NET didn't erase names during the compile
-        const string expected = @"Item1,Item2
-5,True";
+        const string expected = """
+                                Item1,Item2
+                                5,True
+                                """;
         var input  = (Count: 5, Flag: true);
         var result = CsvConvert.Serialize(input);
         Assert.That(result, Is.EqualTo(expected));
@@ -27,8 +29,10 @@ public class SerializeFixture
     [Test]
     public void SerializeAnonymousObject_UnnamedFields()
     {
-        const string expected = @"Item1,Item2
-5,True";
+        const string expected = """
+                                Item1,Item2
+                                5,True
+                                """;
         var input  = (5, true);
         var result = CsvConvert.Serialize(input);
         Assert.That(result, Is.EqualTo(expected));
@@ -37,8 +41,10 @@ public class SerializeFixture
     [Test]
     public void SerializeSingleObject()
     {
-        const string expected = @"Count,Flag,Description
-5,True,""This is the description""";
+        const string expected = """
+                                Count,Flag,Description
+                                5,True,"This is the description"
+                                """;
 
         var input = new SimpleExample
         {
@@ -54,8 +60,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_ShouldEscapeDoubleQuote()
     {
-        const string expected = @"Count,Flag,Description
-5,True,""This is a quote""""";
+        const string expected = """
+                                Count,Flag,Description
+                                5,True,"This is a quote""
+                                """;
 
         var input = new SimpleExample
         {
@@ -71,7 +79,9 @@ public class SerializeFixture
     [Test]
     public void Serialize_ShouldNotEmitHeader()
     {
-        const string expected = @"5,True,""This is the description""";
+        const string expected = """
+                                5,True,"This is the description"
+                                """;
 
         var input = new SimpleExample
         {
@@ -87,8 +97,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_EscapeStringsWithSeparator()
     {
-        const string expected = @"Count!Flag!Description
-5!True!""Hi!""";
+        const string expected = """
+                                Count!Flag!Description
+                                5!True!"Hi!"
+                                """;
 
         var input = new SimpleExample
         {
@@ -107,8 +119,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_DifferentSeparator()
     {
-        const string expected = @"Count!Flag!Description
-5!True!""This is the description""";
+        const string expected = """
+                                Count!Flag!Description
+                                5!True!"This is the description"
+                                """;
 
         var input = new SimpleExample
         {
@@ -127,8 +141,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_ShouldHonorPropertyAttribute()
     {
-        const string expected = @"count,flag,desc
-5,True,""This is the description""";
+        const string expected = """
+                                count,flag,desc
+                                5,True,"This is the description"
+                                """;
 
         var input = new PropertyAttributeExample
         {
@@ -144,8 +160,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_ShouldEscapePropertyNames()
     {
-        const string expected = @"""The Count"",""A Flag"",""A Description""
-5,True,""This is the description""";
+        const string expected = """
+                                "The Count","A Flag","A Description"
+                                5,True,"This is the description"
+                                """;
 
         var input = new EscapedPropertyAttributeExample
         {
@@ -161,8 +179,10 @@ public class SerializeFixture
     [Test]
     public void SerializeRecord()
     {
-        const string expected = @"Count,Flag,Description
-5,True,""This is the description""";
+        const string expected = """
+                                Count,Flag,Description
+                                5,True,"This is the description"
+                                """;
 
         var input = new RecordExample
         {
@@ -178,8 +198,10 @@ public class SerializeFixture
     [Test]
     public void SerializeStruct()
     {
-        const string expected = @"Count,Flag,Description
-5,True,""This is the description""";
+        const string expected = """
+                                Count,Flag,Description
+                                5,True,"This is the description"
+                                """;
 
         var input = new StructExample
         {
@@ -195,8 +217,10 @@ public class SerializeFixture
     [Test]
     public void Serialize_ShouldHonorIgnoreAttribute()
     {
-        const string expected = @"Flag,Description
-True,""This is the description""";
+        const string expected = """
+                                Flag,Description
+                                True,"This is the description"
+                                """;
 
         var input = new IgnoreAttributeExample
         {
@@ -212,8 +236,10 @@ True,""This is the description""";
     [Test]
     public void Serialize_OnlyPublicModifiers()
     {
-        const string expected = @"Description
-""This is the description""";
+        const string expected = """
+                                Description
+                                "This is the description"
+                                """;
 
         var input = new AccessModifierExample(5, true, "This is the description");
             
@@ -224,9 +250,11 @@ True,""This is the description""";
     [Test]
     public void SerializeMultipleObjects()
     {
-        const string expected = @"Count,Flag,Description
-5,True,""This is the description""
-10,False,""This is another description""";
+        const string expected = """
+                                Count,Flag,Description
+                                5,True,"This is the description"
+                                10,False,"This is another description"
+                                """;
 
         var input = new List<SimpleExample>
         {
@@ -263,8 +291,10 @@ True,""This is the description""";
             Status = ExampleStatuses.Done
         };
         
-        const string expected = @"Status
-Done";
+        const string expected = """
+                                Status
+                                Done
+                                """;
         
         var result = CsvConvert.Serialize(input);
         
@@ -279,8 +309,10 @@ Done";
             Status = ExampleStatuses.InProgress
         };
         
-        const string expected = @"Status
-""In Progress""";
+        const string expected = """
+                                Status
+                                "In Progress"
+                                """;
         
         var result = CsvConvert.Serialize(input);
         

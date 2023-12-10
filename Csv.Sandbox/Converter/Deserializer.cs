@@ -45,7 +45,7 @@ internal static class Deserializer
 
     private static T DeserializeObject<T>(
         IList<string> headers,
-        IDictionary<string, ValueAccessor> accessors,
+        IReadOnlyDictionary<string, ValueAccessor> accessors,
         IList<string> currentRow,
         int rowIndex,
         Action<string> onError = null) where T : new() => (T)Enumerable
